@@ -10,11 +10,9 @@
 #include <iostream>
 #include <fstream>
 
-void write_color(std::ofstream &file, color pixel_color) {
-    // Write the translated [0,255] value of each color component.
-          file << static_cast<int>(255.999 * pixel_color.r()) << ' '
-              << static_cast<int>(255.999 * pixel_color.g()) << ' '
-              << static_cast<int>(255.999 * pixel_color.b()) << '\n';
+void write_color(std::ofstream &file, float intensity) {
+    // Write the translated [0,255] value of pixel intensity
+          file << static_cast<int>(255.999 * (1.0-intensity)) << '\n';
 }
 
 #endif //COLOR_H
