@@ -47,7 +47,7 @@ int main() {
 
     // Render
     std::ofstream render;
-    render.open("examples/test.pgm"); // open pgm file for writing greyscale image
+    render.open("examples/sphere_of_water.pgm"); // open pgm file for writing greyscale image
     render << "P2\n" << image_width << ' ' << image_height << "\n255\n";
     for (int j = image_height-1; j >= 0; --j) {
         std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
