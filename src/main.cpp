@@ -5,24 +5,17 @@
 #include "sphere.h"
 
 #include <iostream>
-#include <fstream>
-
-float tran_prob(float d, float mu_m, float rho_m){
-    return exp(-mu_m*rho_m*d);
-}
 
 float ray_intensity(const ray& r, const hittable& world) {
     hit_record rec;
-    if (world.hit(r, 0, infinity, rec)) {
-        float d = std::abs(rec.t[0] - rec.t[1])*r.direction().length();
-        float mu_m = 2.059E-01;
-        float rho_m = 1.0;
-        return tran_prob(d, mu_m, rho_m);
-    }
-    else {
-        return 1.0;
-    }
+      if (world.hit(r, 0, infinity, rec)) {
+            return rec.trans_prob; // if hit, return the probability of transmission
+        }
+      else {
+          return 1; // if not hit, return 1 (vacuum)
+      }
 }
+
 
 int main() {
 
@@ -33,10 +26,13 @@ int main() {
 
     // World
     hittable_list world; // list of objects in the world;
-    world.add(make_shared<sphere>(point3(0,0,-1), 0.5));
+    world.add(make_shared<sphere>(point3(0,0,-1), 0.5, make_shared<material>(2.059E-01, 1.0))); // sphere of water
+    world.add(make_shared<sphere>(point3(0,0.5,-3), 0.5, make_shared<material>(3.843E+00, 11.29))); // sphere of lead
+    world.add(make_shared<sphere>(point3(0,-0.5,-3), 0.5, make_shared<material>(3.148E-01, 1.8))); // sphere of cortical bone
+
 
     // Camera
-    const float viewport_height = 2.0;
+    const float viewport_height = 1.5;
     const float viewport_width = aspect_ratio * viewport_height;
     const float focal_length = 1.0;
 
@@ -47,7 +43,7 @@ int main() {
 
     // Render
     std::ofstream render;
-    render.open("examples/sphere_of_water.pgm"); // open pgm file for writing greyscale image
+    render.open("examples/sphere_of_water_w_lead_and_bone.pgm"); // open pgm file for writing greyscale image
     render << "P2\n" << image_width << ' ' << image_height << "\n255\n";
     for (int j = image_height-1; j >= 0; --j) {
         std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
@@ -55,7 +51,8 @@ int main() {
             auto u = float(i) / (image_width-1);
             auto v = float(j) / (image_height-1);
             ray r(origin, lower_left_corner + u*horizontal + v*vertical); // ray from camera to pixel;
-            write_color(render, ray_intensity(r, world));
+            float intensity = ray_intensity(r, world);
+            write_color(render, intensity);
         }
     }
     render.close();

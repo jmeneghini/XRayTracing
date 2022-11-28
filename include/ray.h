@@ -16,6 +16,10 @@ public:
     point3 at(float t) const {
         return orig + t*dir; // ray equation
     }
+
+    float diff(float t1, float t2) const {
+        return std::abs(t1 - t2)*dir.length(); // distance between two points on ray
+    }
 public:
     point3 orig;
     vec3 dir;

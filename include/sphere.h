@@ -7,13 +7,14 @@
 class sphere : public hittable {
 public:
     sphere() {}
-    sphere(point3 cen, float r) : center(cen), radius(r) {};
+    sphere(point3 cen, float r, shared_ptr<material> m) : center(cen), radius(r), mat_ptr(m) {};
 
     virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const override;
 
 public:
     point3 center;
     float radius;
+    shared_ptr<material> mat_ptr;
 };
 
 bool sphere::hit(const ray &r, float t_min, float t_max, hit_record &rec) const {
@@ -26,20 +27,24 @@ bool sphere::hit(const ray &r, float t_min, float t_max, hit_record &rec) const 
     if (discriminant < 0) return false;
     auto sqrtd = sqrt(discriminant);
 
-    // Find the nearest root that lies in the acceptable range.
+    // Find all roots that lie in the acceptable range.
+    float dist;
     bool is_hit = false;
-    auto root0 = (-half_b + sqrtd) / a;
+    auto root0 = (-half_b + sqrtd) / a;  // calculate both possible roots
     auto root1 = (-half_b - sqrtd) / a;
-    if (root0 > t_min && t_max > root0) {
-        rec.t.push_back(root0);
-        rec.p.push_back(r.at(root0));
+    if (root0 > t_min && t_max > root0) { // check if root0 is in the acceptable range
+        rec.t.push_back(root0); // store root0
+        rec.p.push_back(r.at(root0)); // store the point of root0
+        dist = 0; // distance travelled through material is zero
         is_hit = true;
     };
-    if (root1 > t_min && t_max > root1 && root1 != root0) {
-        rec.t.push_back(root1);
-        rec.p.push_back(r.at(root1));
+    if (root1 > t_min && t_max > root1 && root1 != root0) { // check if root1 is in the acceptable range
+        rec.t.push_back(root1); // store root1
+        rec.p.push_back(r.at(root1)); // store the point of root1
+        dist = r.diff(root0, root1); // calculate the distance travelled through material
         is_hit = true;
     };
+    rec.trans_prob = mat_ptr->transmission(dist);  // calculate the transmission probability
     return is_hit;
 };
 

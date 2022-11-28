@@ -24,15 +24,22 @@ public:
 };
 
 bool hittable_list::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
-    hit_record temp_rec;
-    bool hit_anything = false;
-    auto closest_so_far = t_max;
+    hit_record temp_rec; // temp_rec is used to store the hit_record of the closest object
+    bool hit_anything = false;  // hit_anything is used to check if any object is hit
+    auto closest_so_far = t_max;  // closest_so_far is used to store the distance of the closest object
+    float total_prob = 1.0;  // total_prob is used to store the total probability of the transmission
 
-    for (const auto& object : objects) {
-        if (object->hit(r, t_min, closest_so_far, temp_rec)) {
+    for (const auto& object : objects) { // loop through all objects
+        if (object->hit(r, t_min, t_max, temp_rec)) {
             hit_anything = true;
-            closest_so_far = temp_rec.t[0];
+            if (temp_rec.t[0] < closest_so_far) {
+                closest_so_far = temp_rec.t[0]; // update the closest_so_far to nearest root of object
+            }
+            total_prob *= temp_rec.trans_prob; // update the total_prob
+            temp_rec.trans_prob = total_prob;
             rec = temp_rec;
+
+
         }
     }
 
