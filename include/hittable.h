@@ -6,7 +6,7 @@
 #include "utility.h"
 
 struct hit_record {
-    std::vector<point3> p;
+    std::vector<vec3> p;
     std::vector<float> t;
     float trans_prob;
 };

@@ -26,9 +26,9 @@ int main() {
 
     // World
     hittable_list world; // list of objects in the world;
-    world.add(make_shared<sphere>(point3(0,0,-1), 0.5, make_shared<material>(2.059E-01, 1.0))); // sphere of water
-    world.add(make_shared<sphere>(point3(0,0.5,-3), 0.5, make_shared<material>(3.843E+00, 11.29))); // sphere of lead
-    world.add(make_shared<sphere>(point3(0,-0.5,-3), 0.5, make_shared<material>(3.148E-01, 1.8))); // sphere of cortical bone
+    world.add(make_shared<sphere>(vec3(0,0,-1), 0.5, make_shared<material>(2.059E-01, 1.0))); // sphere of water
+    world.add(make_shared<sphere>(vec3(0,0.5,-3), 0.5, make_shared<material>(3.843E+00, 11.29))); // sphere of lead
+    world.add(make_shared<sphere>(vec3(0,-0.5,-3), 0.5, make_shared<material>(3.148E-01, 1.8))); // sphere of cortical bone
 
 
     // Camera
@@ -36,7 +36,7 @@ int main() {
     const float viewport_width = aspect_ratio * viewport_height;
     const float focal_length = 1.0;
 
-    point3 origin = point3(0, 0, 0);
+    vec3 origin = vec3(0, 0, 0);
     vec3 horizontal = vec3(viewport_width, 0, 0);
     vec3 vertical = vec3(0, viewport_height, 0);
     vec3 lower_left_corner = origin - horizontal/2 - vertical/2 - vec3(0, 0, focal_length);
