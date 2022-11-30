@@ -7,6 +7,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <vector>
 
 using std::sqrt;
 
@@ -99,6 +100,10 @@ inline vec3 cross(const vec3 &u, const vec3 &v) {
 }
 inline vec3 unit_vector(vec3 v) {
     return v / v.length();
+}
+
+inline vec3 vectortoVec3(const float *v) {
+    return vec3(v[0], v[1], v[2]);
 }
 
 #endif //VEC3_H

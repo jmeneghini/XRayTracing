@@ -3,6 +3,7 @@
 #include "color.h"
 #include "hittable_list.h"
 #include "sphere.h"
+#include "mesh.h"
 
 #include <iostream>
 
@@ -26,24 +27,23 @@ int main() {
 
     // World
     hittable_list world; // list of objects in the world;
-    world.add(make_shared<sphere>(vec3(0,0,-1), 0.5, make_shared<material>(2.059E-01, 1.0))); // sphere of water
-    world.add(make_shared<sphere>(vec3(0,0.5,-3), 0.5, make_shared<material>(3.843E+00, 11.29))); // sphere of lead
-    world.add(make_shared<sphere>(vec3(0,-0.5,-3), 0.5, make_shared<material>(3.148E-01, 1.8))); // sphere of cortical bone
+    world.add(make_shared<mesh>("stl/bone.stl", vec3(0, 0, -3),  make_shared<material>(3.148E-01, 1.8))); // bone
+
 
 
     // Camera
-    const float viewport_height = 1.5;
+    const float viewport_height = 12.0;
     const float viewport_width = aspect_ratio * viewport_height;
-    const float focal_length = 1.0;
+    const float focal_length = 6.0;
 
     vec3 origin = vec3(0, 0, 0);
     vec3 horizontal = vec3(viewport_width, 0, 0);
     vec3 vertical = vec3(0, viewport_height, 0);
-    vec3 lower_left_corner = origin - horizontal/2 - vertical/2 - vec3(0, 0, focal_length);
+    vec3 lower_left_corner = origin - horizontal/2 - vertical/2 - vec3(-1, 0, focal_length);
 
     // Render
     std::ofstream render;
-    render.open("examples/sphere_of_water_w_lead_and_bone.pgm"); // open pgm file for writing greyscale image
+    render.open("examples/bone.pgm"); // open pgm file for writing greyscale image
     render << "P2\n" << image_width << ' ' << image_height << "\n255\n";
     for (int j = image_height-1; j >= 0; --j) {
         std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
