@@ -24,7 +24,7 @@ public:
 };
 
 bool hittable_list::hit(const ray& r, float t_min, float t_max, hit_record& rec) const {
-    hit_record temp_rec; // temp_rec is used to store the hit_record of the closest object
+    hit_record temp_rec; // temp_rec is used to store the hit_record of all objects
     bool hit_anything = false;  // hit_anything is used to check if any object is hit
     auto closest_so_far = t_max;  // closest_so_far is used to store the distance of the closest object
     float total_prob = 1.0;  // total_prob is used to store the total probability of the transmission
