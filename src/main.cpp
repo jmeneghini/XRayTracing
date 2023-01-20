@@ -27,9 +27,7 @@ int main() {
 
     // World
     hittable_list world; // list of objects in the world;
-    world.add(make_shared<mesh>("stl/bone.stl", vec3(0, 0, -3),  make_shared<material>(3.148E-01, 1.8))); // bone
-
-
+    world.add(make_shared<mesh>("stl/ancient_chinese_coin.stl", vec3(0, 0, 0),  make_shared<material>(3.148E-01, 1.8))); // bone
 
     // Camera
     const float viewport_height = 12.0;
@@ -43,7 +41,7 @@ int main() {
 
     // Render
     std::ofstream render;
-    render.open("examples/bone.pgm"); // open pgm file for writing greyscale image
+    render.open("examples/ancient_chinese_coin.pgm"); // open pgm file for writing greyscale image
     render << "P2\n" << image_width << ' ' << image_height << "\n255\n";
     for (int j = image_height-1; j >= 0; --j) {
         std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
