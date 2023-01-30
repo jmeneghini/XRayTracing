@@ -2,14 +2,18 @@
 #define UTILITY_H
 
 #include <cmath>
-#include <limits>
-#include <memory>
+#include "thrust/limits.h"
+#include "thrust/device_vector.h"
+#include "thrust/host_vector.h"
+#include "thrust/device_ptr.h"
+
 
 
 // Usings
 
-using std::shared_ptr;
-using std::make_shared;
+using thrust::device_ptr;
+using thrust::device_vector;
+using thrust::host_vector;
 using std::sqrt;
 
 // Constants

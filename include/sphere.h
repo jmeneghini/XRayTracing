@@ -3,21 +3,23 @@
 
 #include "hittable.h"
 #include "vec3.h"
+#include "utility.h"
 
 class sphere : public hittable {
 public:
-    sphere() {}
-    sphere(vec3 cen, float r, shared_ptr<material> m) : center(cen), radius(r), mat_ptr(m) {};
+    __device__ sphere() {}
+    __device__ sphere(vec3 cen, float r, device_ptr<material> m) : center(cen), radius(r), mat_ptr(m) {};
 
-    virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const override;
+    __device__ virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const override;
 
 public:
     vec3 center;
     float radius;
-    shared_ptr<material> mat_ptr;
+    device_ptr<material> mat_ptr
+    ;
 };
 
-bool sphere::hit(const ray &r, float t_min, float t_max, hit_record &rec) const {
+__device__ bool sphere::hit(const ray &r, float t_min, float t_max, hit_record &rec) const {
     vec3 oc = r.origin() - center;
     auto a = r.direction().length_squared();
     auto half_b = dot(oc, r.direction());

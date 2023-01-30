@@ -4,10 +4,10 @@
 
 class material {
 public:
-    material() {}
-    material(float mass_atten, float density) : mu_m(mass_atten), rho(density) {}
+    __device__ material() {}
+    __device__ material(float mass_atten, float density) : mu_m(mass_atten), rho(density) {}
 
-    virtual float transmission(float d) const {
+    __device__ virtual float transmission(float d) const {
         return exp(-mu_m * rho * d); // Beer-Lambert law
     }
 public:
