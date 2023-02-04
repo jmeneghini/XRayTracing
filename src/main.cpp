@@ -28,7 +28,7 @@ int main() {
     // Camera
     const float viewport_height = 18.0; // in cm
     const float viewport_width = aspect_ratio * viewport_height;
-    const float focal_length = 100; // in cm
+    const float focal_length = 49.5; // in cm
 
     // World
     hittable_list world; // list of objects in the world;
@@ -40,17 +40,17 @@ int main() {
 //                                make_shared<material>(1.751E-01, 1.19000E+00))); //  acrylic container at 80 keV
 //    world.add(make_shared<mesh>("stl/plastic_container_liquid.stl", vec3(0, 0, -focal_length),
 //                                make_shared<material>(1.837E-01, 1.0))); //  water at 80 keV
-    world.add(make_shared<mesh>("stl/aluminum_G.stl", vec3(0, 0, -focal_length),
+    world.add(make_shared<mesh>("stl/aluminum_G.stl", vec3(0.1f, 0, -focal_length),
                                 make_shared<material>(2.018E-01, 2.699E+00))); //  aluminum at 80 keV
 
     vec3 origin = vec3(0, 0, 0);
     vec3 horizontal = vec3(viewport_width, 0, 0);
     vec3 vertical = vec3(0, viewport_height, 0);
-    vec3 lower_left_corner = origin - horizontal/2 - vertical/2 - vec3(-1, 0, focal_length);
+    vec3 lower_left_corner = origin - horizontal/2 - vertical/2 - vec3(0, 0, focal_length);
 
     // Render
     std::ofstream render;
-    render.open("examples/test.pgm"); // open pgm file for writing greyscale image
+    render.open("examples/aluminum_G.pgm"); // open pgm file for writing greyscale image
     render << "P2\n" << image_width << ' ' << image_height << "\n255\n";
     for (int j = image_height-1; j >= 0; --j) {
         std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
