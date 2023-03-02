@@ -54,14 +54,13 @@ int main(int argc, char *argv[]) {
     int image_width =  config["camera"]["image"]["width"].get<int>();
     int image_height = image_width * aspect_ratio;
     int viewport_width = config["viewport"]["width"].get<int>();
-    int viewport_height = viewport_width * aspect_ratio;
+    int viewport_height = viewport_width / aspect_ratio;
 
     int focal_length = config["viewport"]["focal_length"].get<float>();
 
-
-    camera cam(image_width, viewport_width, aspect_ratio, focal_length);
-
-
+    cout << "Image resolution: " << image_width << "x" << image_height << endl;
+    cout << "Viewport dimensions: " << viewport_width << "x" << viewport_height << endl;
+    camera camera(viewport_width, aspect_ratio, focal_length);
 
     // World
     hittable_list world; // list of objects in the world;
@@ -85,7 +84,7 @@ int main(int argc, char *argv[]) {
         for (int i = 0; i < image_width; ++i) {
             auto u = float(i) / (image_width-1);
             auto v = float(j) / (image_height-1);
-            ray r = cam.get_ray(u, v); // ray from camera to pixel;
+            ray r = camera.get_ray(u, v); // ray from camera to pixel;
             float intensity = ray_intensity(r, world);
             write_color(render, intensity);
         }
