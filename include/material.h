@@ -19,7 +19,7 @@ public:
 
 
     float transmission(float d) const {
-        return exp(-mu_m * d);
+        return exp(-mu_m * rho * d);
     }
 
 
@@ -33,6 +33,7 @@ private:
     float energy;
     std::vector<ElementalContribution> composition;
     float mu_m;
+    float rho;
 
 
     void extractComposition() {
@@ -59,6 +60,8 @@ private:
             std::cerr << "Failed to parse file " << compFile << ": " << e.what() << std::endl;
             exit(1);
         }
+
+        rho = j["composition"]["density"];
 
         for (auto &element: j["composition"]["elements"]) {
             ElementalContribution e;
@@ -91,7 +94,7 @@ private:
             mu_m += mu_m_i * fractionWeight;
         }
         std::cout << "<Mass Attenuation Coefficient>" << std::endl;
-        std::cout << name << ": Effective Energy = " << energy*1E3<< " keV, mu/rho = " << mu_m << " cm^2/g\n" << std::endl;
+        std::cout << name << ": Effective Energy = " << energy*1E3<< " keV, mu/rho = " << mu_m << " cm^2/g" << ", rho = " << rho << " g/cm^2\n" << std::endl;
     }
 };
 
