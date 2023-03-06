@@ -1,0 +1,20 @@
+﻿{
+  "camera" : {
+    "aspect_ratio" : 1.0,
+    "position": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "image": {
+      "width": 678,
+      "height": 678
+    }
+  },
+
+  "viewport": {
+    "height": 15.0,
+    "width": 15.0,
+    "focal_length": 44.95
+  }
+}

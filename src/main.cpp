@@ -4,9 +4,7 @@
 #include "hittable_list.h"
 #include "sphere.h"
 #include "mesh.h"
-#include "json.h"
 #include "camera.h"
-#include "json.h"
 #include <string>
 #include <fstream>
 
@@ -38,6 +36,7 @@ int main(int argc, char *argv[]) {
         cout << "Too many arguments" << endl;
         return 1;
     }
+    cout << "\n<Config File Settings>" << endl;
     cout << "Reading config file: " << argv[1] << endl;
     cout << "Output file name: " << argv[2] << endl;
 
@@ -50,34 +49,27 @@ int main(int argc, char *argv[]) {
 
     // Image
     int aspect_ratio = config["camera"]["aspect_ratio"].get<float>();
-
     int image_width =  config["camera"]["image"]["width"].get<int>();
     int image_height = image_width * aspect_ratio;
     int viewport_width = config["viewport"]["width"].get<int>();
     int viewport_height = viewport_width / aspect_ratio;
-
     int focal_length = config["viewport"]["focal_length"].get<float>();
 
+
+    cout << "\n<Image Settings>" << endl;
     cout << "Image resolution: " << image_width << "x" << image_height << endl;
-    cout << "Viewport dimensions: " << viewport_width << "x" << viewport_height << endl;
+    cout << "Viewport dimensions: " << viewport_width << "x" << viewport_height << " cm\n" << endl;
     camera camera(viewport_width, aspect_ratio, focal_length);
 
     // World
     hittable_list world; // list of objects in the world;
-//    world.add(make_shared<mesh>("stl/glass_slab.stl", vec3(0, 0, -focal_length),
-//                                make_shared<material>(1.890E-01, 2.23))); // pyrex glass at 80 keV
-//    world.add(make_shared<mesh>("stl/plastic_slab.stl", vec3(0, 0, -focal_length),
-//                                make_shared<material>(1.751E-01, 1.19000E+00))); // acrylic at 80 keV
-//    world.add(make_shared<mesh>("stl/plastic_container.stl", vec3(0, 0, -focal_length),
-//                                make_shared<material>(1.751E-01, 1.19000E+00))); //  acrylic container at 80 keV
-//    world.add(make_shared<mesh>("stl/plastic_container_liquid.stl", vec3(0, 0, -focal_length),
-//                                make_shared<material>(1.837E-01, 1.0))); //  water at 80 keV
-    world.add(make_shared<mesh>("stl/aluminum_G.stl", vec3(0.1f, 0, -focal_length),
-                                make_shared<material>(2.018E-01, 2.699E+00))); //  aluminum at 80 keV
+    world.add(make_shared<mesh>("stl/aluminum_G.stl", vec3(0, 0, -focal_length),
+                                make_shared<material>("Al", 27.0))); // Plastic Container
+
 
     // Render
     std::ofstream render;
-    render.open(argv[2]); // open pgm file for writing greyscale image
+    render.open(string(argv[2]) + ".pgm"); // open pgm file for writing greyscale image
     render << "P2\n" << image_width << ' ' << image_height << "\n255\n";
     for (int j = image_height-1; j >= 0; --j) {
         std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
@@ -90,6 +82,8 @@ int main(int argc, char *argv[]) {
         }
     }
     render.close();
+    system((string("convert") + " " + argv[2] + ".pgm " + argv[2] + ".png").c_str()); // convert pgm to png
+    system((string("rm") + " " + argv[2] + ".pgm").c_str()); // remove pgm file
     std::cerr << "\nDone.\n";
     return 0;
 }
