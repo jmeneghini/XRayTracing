@@ -6,19 +6,19 @@
 
 class triangle : public hittable {
 public:
-    triangle() {}
-    triangle(vec3 v0, vec3 v1, vec3 v2, shared_ptr<material> m) : v0(v0), v1(v1), v2(v2), mat_ptr(m) {};
+    __device__ triangle() {}
+    __device__ triangle(vec3 v0, vec3 v1, vec3 v2, material* m) : v0(v0), v1(v1), v2(v2), mat_ptr(m) {};
 
-    virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const override;
+    __device__ virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const override;
 
 public:
     vec3 v0;
     vec3 v1;
     vec3 v2;
-    shared_ptr<material> mat_ptr;
+    material* mat_ptr;
 };
 
-bool triangle::hit(const ray &r, float t_min, float t_max, hit_record &rec) const {
+__device__ bool triangle::hit(const ray &r, float t_min, float t_max, hit_record &rec) const {
     float kEpsilon = 0.0000001;
 
     vec3 e1 = v1 - v0;
@@ -26,7 +26,7 @@ bool triangle::hit(const ray &r, float t_min, float t_max, hit_record &rec) cons
     vec3 pvec = cross(r.direction(), e2);
     float det = dot(e1, pvec);
 
-    if (std::abs(det) < kEpsilon) return false;  // ray is parallel to triangle
+    if (fabsf(det) < kEpsilon) return false;  // ray is parallel to triangle
 
     float inv_det = 1.0 / det;
 

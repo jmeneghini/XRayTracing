@@ -8,7 +8,7 @@ using nlohmann::json;
 
 class material {
 public:
-    material(const char *matName, const float effectiveEnergy) :
+    __host__ material(const char *matName, const float effectiveEnergy) :
             name(matName),
             energy(effectiveEnergy / 1E3),
             composition(),
@@ -18,7 +18,7 @@ public:
     }
 
 
-    float transmission(float d) const {
+    __device__ float transmission(float d) const {
         return exp(-mu_m * rho * d);
     }
 
@@ -29,15 +29,15 @@ private:
         float fractionWeight;
     };
 
-    string name;
+    std::string name;
     float energy;
     std::vector<ElementalContribution> composition;
     float mu_m;
     float rho;
 
 
-    void extractComposition() {
-        string compFile = string("materials/mat_def/") + name + ".comp";  // find the composition file
+    __host__ void extractComposition() {
+        std::string compFile = std::string("materials/mat_def/") + name + ".comp";  // find the composition file
         std::ifstream file(compFile);
         if (!file) {
             std::cerr << "Error opening file " << compFile << std::endl;
@@ -71,7 +71,7 @@ private:
         }
     }
 
-    void findMassAttenuationCoefficient() {
+    __host__ void findMassAttenuationCoefficient() {
         std::ifstream file("/home/john/XRayTracing/materials/nist_mu.dat");
         json j;
         file >> j;

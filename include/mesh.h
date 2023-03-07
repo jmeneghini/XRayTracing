@@ -7,37 +7,37 @@
 #include "stl_reader.h"
 #include <algorithm>
 
-using std::shared_ptr;
-using std::make_shared;
+
 using namespace std;
 
 class mesh : public hittable {
     public:
-    mesh() {}
-    mesh(const char* filename, vec3 position, shared_ptr<material> m) : mat_ptr(m), pos(position) { read_obj(filename); }
+    __device__ mesh() {}
+    __device__ mesh(const char* filename, vec3 position, material* m) : mat_ptr(m), pos(position) { read_obj(filename); }
 
-    virtual void read_obj(const char* filename);
+    __host__ virtual void read_obj(const char* filename);
 
-    virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const override;
-
-    void clear() { objects.clear(); }
-    void add(shared_ptr<hittable> object) { objects.push_back(object); }
+    __device__ virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const override;
 
 public:
-    shared_ptr<material> mat_ptr;
-    std::vector<shared_ptr<hittable>> objects;
+    material *mat_ptr;
+    hittable **list;
+
+    int list_size;
     vec3 pos;
 };
 
-void mesh::read_obj(const char* filename) {
+__host__ void mesh::read_obj(const char* filename) {
     try {
         stl_reader::StlMesh<float, unsigned int> mesh (filename);
 
+        list_size = mesh.num_tris();
+        list = new hittable*[list_size];
         for (int i = 0; i < mesh.num_tris(); i++) {
             vec3 v0 = vectortoVec3(mesh.tri_corner_coords(i, 0)) + pos;
             vec3 v1 = vectortoVec3(mesh.tri_corner_coords(i, 1)) + pos;
             vec3 v2 = vectortoVec3(mesh.tri_corner_coords(i, 2)) + pos;
-            add(make_shared<triangle>(v0, v1, v2, mat_ptr));
+            list[i] = new triangle(v0, v1, v2, mat_ptr);
         }
     }
     catch (const std::exception &e) {
@@ -45,13 +45,13 @@ void mesh::read_obj(const char* filename) {
     }
 }
 
-bool mesh::hit(const ray &r, float t_min, float t_max, hit_record &rec) const {
+__device__ bool mesh::hit(const ray &r, float t_min, float t_max, hit_record &rec) const {
     bool is_hit = false;
     hit_record mesh_rec;
     float d = 0; // d is used to store the distance travelled through the object
 
-    for (const auto &object: objects) {
-        if (object->hit(r, t_min, t_max, mesh_rec)) {
+    for (int i = 0; i < list_size; i++) {
+        if (list[i]->hit(r, t_min, t_max, mesh_rec)) {
             is_hit = true;
         }
     }

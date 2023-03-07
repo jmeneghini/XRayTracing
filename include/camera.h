@@ -5,8 +5,7 @@
 
 class camera {
 public:
-    camera() {}
-    camera(float viewport_width, float aspect_ratio, float focal_length) {
+    __device__ camera(float viewport_width, float aspect_ratio, float focal_length) {
         float viewport_height = viewport_width / aspect_ratio;
 
 
@@ -18,7 +17,7 @@ public:
 
 
     }
-    ray get_ray(float u, float v) const {
+    __device__ ray get_ray(float u, float v) const {
         return ray(origin, lower_left_corner + u*horizontal + v*vertical);
     }
 private:

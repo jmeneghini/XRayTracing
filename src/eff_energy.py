@@ -12,7 +12,7 @@ z_dist = 44.95 # cm
 eff_E_arr = []
 avg_E_arr = []
 
-for kvp in np.arange(30, 80, 1):
+for kvp in np.arange(30, 90, 1):
     s = sp.Spek(kvp = kvp, th = ang, z = z_dist)
     s.filter('Al', filt)
     eff_E = s.get_eeff()
@@ -23,10 +23,10 @@ for kvp in np.arange(30, 80, 1):
 
 eff_E_arr = np.array(eff_E_arr)
 avg_E_arr = np.array(avg_E_arr)
-print(eff_E_arr[np.arange(30, 80, 1) == 50]) # 50 kVp
+print(eff_E_arr[np.arange(30, 90, 1) == 50])
 # plot effective energy
-plt.plot(np.arange(30, 80, 1), eff_E_arr, label = 'Effective Energy')
-plt.plot(np.arange(30, 80, 1), avg_E_arr, label = 'Average Energy')
+plt.plot(np.arange(30, 90, 1), eff_E_arr, label = 'Effective Energy')
+plt.plot(np.arange(30, 90, 1), avg_E_arr, label = 'Average Energy')
 plt.xlabel("kVp (keV)")
 plt.ylabel("Energy (keV)")
 plt.legend()

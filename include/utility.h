@@ -7,29 +7,25 @@
 #include <array>
 #include <vector>
 #include <string>
+#include <thrust/device_vector.h>
+
 
 
 // Usings
 
-using std::shared_ptr;
-using std::make_shared;
-using std::sqrt;
-using std::array;
-using std::string;
-using std::vector;
 
 // Constants
 
-const double infinity = std::numeric_limits<double>::infinity();
+const double infinity = INFINITY;
 const double pi = 3.1415926535897932385;
 
 // Utility Functions
 
-inline double degrees_to_radians(double degrees) {
+__host__ inline double degrees_to_radians(double degrees) {
     return degrees * pi / 180.0;
 }
 
-float interpolate(const std::vector<float>& x, const std::vector<float>& y, float x_val) {
+__host__ float interpolate(const std::vector<float>& x, const std::vector<float>& y, float x_val) {
     // find the index i such that x[i] <= x_val <= x[i+1]
     int i = 0;
     while (i < x.size() - 1 && x[i+1] < x_val) {
