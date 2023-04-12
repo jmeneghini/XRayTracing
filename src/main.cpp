@@ -63,8 +63,8 @@ int main(int argc, char *argv[]) {
 
     // World
     hittable_list world; // list of objects in the world;
-    world.add(make_shared<mesh>("stl/aluminum_G.stl", vec3(0, 0, -focal_length),
-                                make_shared<material>("Al", 27.0))); // Plastic Container
+    world.add(make_shared<mesh>("stl/Soda_Can.stl", vec3(0, 0, -focal_length),
+                                make_shared<material>("Al", 40))); // Plastic Container
 
 
     // Render
