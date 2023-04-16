@@ -82,12 +82,17 @@ class Material:
 
         return predicted_mu_over_rho, error
 
-    def get_eff_energy_from_mu_over_rho(self, mu_over_rho):
-        predicted_mu_over_rho, error = self.get_mu_over_rho_from_eff_energy(np.linspace(8E-3, 1E-1, 10000))
+    def get_eff_energy_from_mu_over_rho(self, mu_over_rho_u):
+        range = np.linspace(8E-3, 1E-1, 10000)
 
-        # find the index of the closest value in predicted_mu_over_rho to mu_over_rho
-        index = np.argmin(np.abs(predicted_mu_over_rho - mu_over_rho))
-        return np.linspace(8E-3, 1E-1, 10000)[index]
+        predicted_mu_over_rho, error = self.get_mu_over_rho_from_eff_energy(range)
+
+        # find the index of the closest value in predicted_mu_over_rho to mu_over_rho (max and min to obtain a range)
+        max_index = np.argmin(np.abs(predicted_mu_over_rho - (mu_over_rho_u.n  + mu_over_rho_u.s)))
+        min_index = np.argmin(np.abs(predicted_mu_over_rho - (mu_over_rho_u.n - mu_over_rho_u.s)))
+        index = np.argmin(np.abs(predicted_mu_over_rho - mu_over_rho_u.n))
+
+        return range[index], range[max_index], range[min_index]
 
 
     class ElementalContribution:
